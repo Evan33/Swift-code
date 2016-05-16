@@ -1,0 +1,105 @@
+//
+//  ViewController.swift
+//  calculator
+//
+//  Created by Borui Wu on 4/8/16.
+//  Copyright © 2016 Borui Wu. All rights reserved.
+//
+
+    
+    import UIKit
+    
+    class ViewController: UIViewController {
+        
+        @IBOutlet var display : UILabel!
+        
+        var userisenteringumbers = false
+        
+        
+        
+        @IBAction func enternumber (sender: UIButton){
+            let digit = sender.currentTitle!
+            
+            if userisenteringumbers {
+                display.text = display.text! + digit
+            } else {
+                display.text = digit
+                
+                userisenteringumbers = true
+            }
+            
+        }
+        var operandStank = Array<Double>()
+        
+        @IBAction func enter () {
+            userisenteringumbers = false
+            
+            operandStank.append(displayvalue)
+            
+            print("operandStack = \(operandStank)")
+            
+        }
+        
+        var displayvalue : Double {
+            
+            get {
+                return NSNumberFormatter ().numberFromString(display.text!)!.doubleValue
+                
+            } set {
+                display.text = "\(newValue)"
+                
+                userisenteringumbers = false
+                
+            }
+        }
+        
+        @IBAction func clear () {
+            displayvalue = 0
+            display.text = "\(displayvalue)"
+        }
+        
+        @IBAction func operate (sender: UIButton) {
+            let operation = sender.currentTitle!
+            
+            if userisenteringumbers {
+                enter()
+            }
+            switch operation {
+                case "➕":performOperation {$0 + $1}
+                case "➖":performOperation {$1 - $0}
+                case "✖️":performOperation {$0 * $1}
+                case "➗":performOperation {$1 / $0}
+                
+            default: break
+            }
+         }
+        func performOperation (operation: (Double, Double)-> Double) {
+            if operandStank.count >= 2 {
+                displayvalue = operation (operandStank.removeLast(), operandStank.removeLast())
+                
+                enter()
+            }
+        }
+        
+        
+        func add (op1: Double, op2: Double) -> Double {
+            return op1 + op2
+        }
+        
+        func substract (op1: Double, op2: Double) -> Double {
+            return op1 - op2
+        }
+        
+        func multiply (op1: Double, op2: Double) -> Double {
+            return op1 * op2
+        }
+        
+        func divide (op1: Double, op2: Double) -> Double {
+            return op1 / op2
+        }
+        
+    }
+
+
+
+
